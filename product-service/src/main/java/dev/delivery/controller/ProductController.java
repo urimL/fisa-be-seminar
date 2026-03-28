@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -21,6 +22,7 @@ import reactor.core.scheduler.Schedulers;
 public class ProductController {
 
     private final ProductRepository productRepository;
+    private final RestTemplate restTemplate;
     private final WebClient webClient;
 
     @GetMapping("/product/{id}")
@@ -33,10 +35,9 @@ public class ProductController {
                         .orElseThrow(() -> new IllegalArgumentException("상품 없음: " + id))
         ).subscribeOn(Schedulers.boundedElastic());
 
-        Mono<InventoryResponse> inventoryMono = webClient.get()
-                .uri("http://localhost:8081/inventory/" + id)
-                .retrieve()
-                .bodyToMono(InventoryResponse.class);
+        Mono<InventoryResponse> inventoryMono = Mono.fromCallable(() ->
+                restTemplate.getForObject("http://localhost:8081/inventory/" + id, InventoryResponse.class)
+        ).subscribeOn(Schedulers.boundedElastic());
 
         Mono<ReviewResponse> reviewMono = webClient.get()
                 .uri("http://localhost:8082/review/" + id)
