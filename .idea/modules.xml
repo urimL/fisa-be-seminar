@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/delivery-service.iml" filepath="$PROJECT_DIR$/.idea/delivery-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/inventory-service.iml" filepath="$PROJECT_DIR$/.idea/modules/inventory-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/inventory-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/inventory-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/inventory-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/inventory-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/product-service.iml" filepath="$PROJECT_DIR$/.idea/modules/product-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/product-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/product-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/product-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/product-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/review-service.iml" filepath="$PROJECT_DIR$/.idea/modules/review-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/review-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/review-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/review-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/review-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shop-service.iml" filepath="$PROJECT_DIR$/.idea/modules/shop-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shop-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/shop-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shop-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/shop-service.test.iml" />
+    </modules>
+  </component>
+</project>
