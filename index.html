@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WebFlux Demo</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>우아한 가게</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --border: #1e1e1e;
-    --text: #e8e8e8;
-    --muted: #555;
+    --primary: #ff6b35;
+    --primary-light: #fff3ee;
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --border: #ebebeb;
+    --text: #1a1a1a;
+    --muted: #888;
     --stage1: #e05252;
-    --stage2: #52b788;
+    --stage2: #27ae60;
     --stage3: #5e9bdb;
-    --accent: #f0c040;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,664 +26,1049 @@
     color: var(--text);
     font-family: 'Noto Sans KR', sans-serif;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
 
-  header {
-    padding: 28px 48px;
+  /* ── TOP NAV ── */
+  .top-nav {
+    background: var(--surface);
     border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
     display: flex;
     align-items: center;
     gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
-  .logo {
-    font-family: 'DM Mono', monospace;
+  .nav-logo {
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-address {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 13px;
     color: var(--muted);
-    letter-spacing: 0.1em;
+    margin-left: 8px;
   }
 
-  .logo span {
-    color: var(--accent);
-  }
+  .nav-address strong { color: var(--text); font-weight: 500; }
 
-  .stage-tabs {
-    display: flex;
-    gap: 8px;
+  .nav-right {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
-  .tab {
-    padding: 8px 20px;
+  .stage-switcher {
+    display: flex;
+    gap: 4px;
+    background: #f0f0f0;
+    padding: 4px;
+    border-radius: 8px;
+  }
+
+  .stage-btn {
+    padding: 5px 12px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 11px;
     font-family: 'DM Mono', monospace;
     cursor: pointer;
-    border: 1px solid var(--border);
+    border: none;
     background: transparent;
     color: var(--muted);
-    transition: all 0.2s;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .stage-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .stage-btn.active.s1 { color: var(--stage1); }
+  .stage-btn.active.s2 { color: var(--stage2); }
+  .stage-btn.active.s3 { color: var(--stage3); }
+
+  /* ── STORE HERO ── */
+  .store-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 32px 24px;
+    color: white;
+  }
+
+  .store-hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .store-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+
+  .store-info { flex: 1; }
+
+  .store-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .store-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .store-meta span { display: flex; align-items: center; gap: 4px; }
+
+  .store-badge {
+    padding: 4px 10px;
+    background: rgba(255,107,53,0.3);
+    border: 1px solid rgba(255,107,53,0.5);
+    border-radius: 20px;
+    font-size: 11px;
+    color: #ffaa88;
+    font-family: 'DM Mono', monospace;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── MENU SECTION ── */
+  .menu-section { display: flex; flex-direction: column; gap: 16px; }
+
+  .category-tabs {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 4px;
+    display: flex;
+    gap: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .cat-tab {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .cat-tab.active {
+    background: var(--primary);
+    color: white;
+  }
+
+  .menu-list {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .menu-header {
+    padding: 16px 20px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
-  .tab:hover { color: var(--text); border-color: #333; }
-
-  .tab.active[data-stage="1"] { background: var(--stage1); border-color: var(--stage1); color: #fff; }
-  .tab.active[data-stage="2"] { background: var(--stage2); border-color: var(--stage2); color: #0a0a0a; }
-  .tab.active[data-stage="3"] { background: var(--stage3); border-color: var(--stage3); color: #fff; }
-
-  main {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 0;
-  }
-
-  .left-panel {
-    border-right: 1px solid var(--border);
-    padding: 40px 36px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-
-  .stage-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .stage-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-
-  .stage-title {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.3;
-  }
-
-  .stage-title.s1 { color: var(--stage1); }
-  .stage-title.s2 { color: var(--stage2); }
-  .stage-title.s3 { color: var(--stage3); }
-
-  .stage-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-
-  .flow-diagram {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    line-height: 2;
-  }
-
-  .flow-line {
+  .menu-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: var(--muted);
-    transition: color 0.3s;
+    gap: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid var(--border);
   }
 
-  .flow-line.active { color: var(--text); }
-  .flow-line .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.3s; }
-  .flow-line.active .dot { background: var(--accent); }
-  .flow-line.parallel.active .dot { background: var(--stage2); }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item:hover { background: #fafafa; }
 
-  .product-select {
+  .menu-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    background: var(--bg);
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .select-label {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
-  }
-
-  .product-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .pill {
-    padding: 6px 14px;
-    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    flex-shrink: 0;
     border: 1px solid var(--border);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--muted);
-    background: transparent;
   }
 
-  .pill:hover { border-color: #444; color: var(--text); }
-  .pill.active { border-color: var(--accent); color: var(--accent); }
+  .menu-info { flex: 1; }
 
-  .fetch-btn {
-    padding: 14px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.03em;
-  }
-
-  .fetch-btn[data-stage="1"] { background: var(--stage1); color: #fff; }
-  .fetch-btn[data-stage="2"] { background: var(--stage2); color: #0a0a0a; }
-  .fetch-btn[data-stage="3"] { background: var(--stage3); color: #fff; }
-  .fetch-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-  .fetch-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-  .right-panel {
-    padding: 40px 48px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-
-  .timer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .timer-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-
-  .timer-display {
-    font-family: 'DM Mono', monospace;
-    font-size: 72px;
-    font-weight: 500;
-    line-height: 1;
-    transition: color 0.3s;
-    color: var(--text);
-  }
-
-  .timer-display.running { color: var(--accent); }
-  .timer-display.done-1 { color: var(--stage1); }
-  .timer-display.done-2 { color: var(--stage2); }
-  .timer-display.done-3 { color: var(--stage3); }
-
-  .timer-unit {
-    font-size: 18px;
-    color: var(--muted);
-    margin-left: 4px;
-  }
-
-  .progress-bar-wrap {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    width: 100%;
-  }
-
-  .progress-bar {
-    height: 100%;
-    width: 0%;
-    border-radius: 2px;
-    transition: width 0.1s linear;
-  }
-
-  .progress-bar.s1 { background: var(--stage1); }
-  .progress-bar.s2 { background: var(--stage2); }
-  .progress-bar.s3 { background: var(--stage3); }
-
-  .history {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .history-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
+  .menu-name {
+    font-size: 15px;
+    font-weight: 600;
     margin-bottom: 4px;
   }
 
-  .history-item {
+  .menu-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .menu-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .menu-add-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    font-size: 20px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    animation: fadeIn 0.3s ease;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    line-height: 1;
   }
 
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .menu-add-btn:hover { background: var(--primary); color: white; }
 
-  .history-badge {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-  }
-
-  .history-badge.s1 { background: rgba(224,82,82,0.15); color: var(--stage1); }
-  .history-badge.s2 { background: rgba(82,183,136,0.15); color: var(--stage2); }
-  .history-badge.s3 { background: rgba(94,155,219,0.15); color: var(--stage3); }
-
-  .history-ms { margin-left: auto; font-weight: 500; }
-  .history-ms.s1 { color: var(--stage1); }
-  .history-ms.s2 { color: var(--stage2); }
-  .history-ms.s3 { color: var(--stage3); }
-
-  .product-card {
+  /* ── CART ── */
+  .cart {
     background: var(--surface);
-    border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 24px;
-    display: none;
-    flex-direction: column;
-    gap: 16px;
-    animation: fadeIn 0.4s ease;
+    border: 1px solid var(--border);
+    position: sticky;
+    top: 76px;
+    overflow: hidden;
   }
 
-  .product-card.visible { display: flex; }
-
-  .card-header {
+  .cart-header {
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    gap: 8px;
   }
 
-  .card-name {
-    font-size: 20px;
+  .cart-count {
+    background: var(--primary);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 700;
   }
 
-  .card-price {
-    font-family: 'DM Mono', monospace;
-    font-size: 18px;
-    color: var(--accent);
-  }
-
-  .card-desc {
-    font-size: 13px;
+  .cart-empty {
+    padding: 40px 20px;
+    text-align: center;
     color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
   }
 
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  .cart-empty .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  .cart-items { padding: 8px 0; }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
     gap: 12px;
+    padding: 10px 20px;
   }
 
-  .card-stat {
-    background: var(--bg);
+  .cart-item-name { flex: 1; font-size: 13px; font-weight: 500; }
+
+  .cart-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qty-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    transition: all 0.1s;
+  }
+
+  .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .qty-num { font-size: 13px; font-weight: 600; min-width: 16px; text-align: center; }
+  .cart-item-price { font-size: 13px; font-weight: 600; min-width: 60px; text-align: right; }
+
+  .cart-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 10px;
   }
 
-  .stat-label {
-    font-size: 10px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .stat-value {
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 700;
   }
 
-  .elapsed-badge {
+  .order-btn {
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: opacity 0.15s;
+  }
+
+  .order-btn:hover { opacity: 0.9; }
+  .order-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── API 성능 패널 ── */
+  .perf-panel {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .perf-header {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .perf-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ccc;
+  }
+
+  .perf-dot.active { background: #27ae60; animation: pulse 1s infinite; }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .perf-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+  .perf-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .perf-label { color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  .perf-value {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .perf-value.s1 { color: var(--stage1); }
+  .perf-value.s2 { color: var(--stage2); }
+  .perf-value.s3 { color: var(--stage3); }
+
+  .perf-history { padding: 0 16px 12px; display: flex; flex-direction: column; gap: 4px; }
+
+  .perf-hist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+
+  .phist-stage { font-weight: 600; }
+  .phist-stage.s1 { color: var(--stage1); }
+  .phist-stage.s2 { color: var(--stage2); }
+  .phist-stage.s3 { color: var(--stage3); }
+  .phist-ms { color: var(--muted); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .modal-drag {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto 0;
+  }
+
+  .modal-thumb {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    margin-top: 12px;
+  }
+
+  .modal-body { padding: 24px; }
+
+  .modal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .modal-name { font-size: 22px; font-weight: 700; }
+  .modal-price { font-size: 22px; font-weight: 700; color: var(--primary); }
+
+  .modal-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .modal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .mstat {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .mstat-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .mstat-value { font-size: 15px; font-weight: 600; }
+
+  .modal-review {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .modal-review strong { color: var(--text); font-size: 12px; display: block; margin-bottom: 4px; }
+
+  .modal-api-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 20px;
     font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    align-self: flex-start;
+    font-size: 11px;
+    margin-bottom: 20px;
   }
 
-  .elapsed-badge.s1 { background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.3); color: var(--stage1); }
-  .elapsed-badge.s2 { background: rgba(82,183,136,0.1); border: 1px solid rgba(82,183,136,0.3); color: var(--stage2); }
-  .elapsed-badge.s3 { background: rgba(94,155,219,0.1); border: 1px solid rgba(94,155,219,0.3); color: var(--stage3); }
+  .modal-api-badge.s1 { background: rgba(224,82,82,0.08); color: var(--stage1); border: 1px solid rgba(224,82,82,0.2); }
+  .modal-api-badge.s2 { background: rgba(39,174,96,0.08); color: var(--stage2); border: 1px solid rgba(39,174,96,0.2); }
+  .modal-api-badge.s3 { background: rgba(94,155,219,0.08); color: var(--stage3); border: 1px solid rgba(94,155,219,0.2); }
 
-  .error-msg {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--stage1);
-    padding: 12px;
-    background: rgba(224,82,82,0.08);
-    border: 1px solid rgba(224,82,82,0.2);
-    border-radius: 6px;
-    display: none;
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
   }
 
-  .divider { height: 1px; background: var(--border); }
+  .modal-qty {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 8px 16px;
+  }
+
+  .modal-qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+  }
+
+  .modal-qty-num { font-size: 16px; font-weight: 700; min-width: 24px; text-align: center; }
+
+  .modal-cart-btn {
+    flex: 1;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .modal-cart-btn:hover { opacity: 0.9; }
+
+  .loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 6px;
+    height: 16px;
+    margin-bottom: 8px;
+  }
+
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.3);
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shop-open-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .shop-open-badge.open { background: rgba(39,174,96,0.1); color: var(--stage2); }
+  .shop-open-badge.closed { background: rgba(224,82,82,0.1); color: var(--stage1); }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">fisa-be-seminar / <span>webflux-demo</span></div>
-  <div class="stage-tabs">
-    <button class="tab active" data-stage="1" onclick="switchStage(1)">Stage 1</button>
-    <button class="tab" data-stage="2" onclick="switchStage(2)">Stage 2</button>
-    <button class="tab" data-stage="3" onclick="switchStage(3)">Stage 3</button>
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-logo">🛵 빠른배달</div>
+  <div class="nav-address">
+    <span>📍</span>
+    <span><strong>서울시 마포구</strong> 월드컵북로 434</span>
   </div>
-</header>
-
-<main>
-  <div class="left-panel">
-    <div class="stage-info">
-      <div class="stage-label">현재 스테이지</div>
-      <div class="stage-title s1" id="stageTitle">REST MVC<br>순차 호출</div>
-      <div class="stage-desc" id="stageDesc">
-        inventory → review → shop 순서로 순차 호출.<br>
-        응답시간 = 각 서비스 응답시간의 <strong>합</strong>.
-      </div>
-    </div>
-
-    <div class="flow-diagram" id="flowDiagram">
-      <div class="flow-line active" id="fl-product">
-        <div class="dot"></div>product-service
-      </div>
-      <div class="flow-line" id="fl-inv" style="padding-left:16px">
-        <div class="dot"></div>→ inventory (500ms)
-      </div>
-      <div class="flow-line" id="fl-rev" style="padding-left:16px">
-        <div class="dot"></div>→ review (300ms)
-      </div>
-      <div class="flow-line" id="fl-shop" style="padding-left:16px">
-        <div class="dot"></div>→ shop (400ms)
-      </div>
-    </div>
-
-    <div class="product-select">
-      <div class="select-label">상품 선택</div>
-      <div class="product-pills">
-        <button class="pill active" onclick="selectProduct(1, this)">떡볶이 세트</button>
-        <button class="pill" onclick="selectProduct(2, this)">치킨 한 마리</button>
-        <button class="pill" onclick="selectProduct(3, this)">짜장면</button>
-        <button class="pill" onclick="selectProduct(4, this)">피자 L사이즈</button>
-        <button class="pill" onclick="selectProduct(5, this)">초밥 세트</button>
-      </div>
-    </div>
-
-    <button class="fetch-btn" data-stage="1" id="fetchBtn" onclick="fetchProduct()">
-      상품 조회하기
-    </button>
-  </div>
-
-  <div class="right-panel">
-    <div class="timer-section">
-      <div class="timer-label">응답시간</div>
-      <div class="timer-display" id="timerDisplay">
-        0<span class="timer-unit">ms</span>
-      </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar s1" id="progressBar"></div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="error-msg" id="errorMsg"></div>
-
-    <div class="product-card" id="productCard">
-      <div class="card-header">
-        <div class="card-name" id="cardName">—</div>
-        <div class="card-price" id="cardPrice">—</div>
-      </div>
-      <div class="card-desc" id="cardDesc">—</div>
-      <div class="card-grid">
-        <div class="card-stat">
-          <div class="stat-label">재고</div>
-          <div class="stat-value" id="cardStock">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">평점</div>
-          <div class="stat-value" id="cardRating">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">리뷰</div>
-          <div class="stat-value" id="cardReview">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">가게</div>
-          <div class="stat-value" id="cardShop">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">카테고리</div>
-          <div class="stat-value" id="cardCategory">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">영업</div>
-          <div class="stat-value" id="cardOpen">—</div>
-        </div>
-      </div>
-      <div class="elapsed-badge s1" id="elapsedBadge">서버 측정: —ms</div>
-    </div>
-
-    <div class="history">
-      <div class="history-label">조회 기록</div>
-      <div id="historyList"></div>
+  <div class="nav-right">
+    <div class="stage-switcher">
+      <button class="stage-btn active s1" data-stage="1" onclick="switchStage(1)">REST-MVC</button>
+      <button class="stage-btn s2" data-stage="2" onclick="switchStage(2)">PARALLEL</button>
+      <button class="stage-btn s3" data-stage="3" onclick="switchStage(3)">BOUNDED</button>
     </div>
   </div>
-</main>
+</nav>
+
+<!-- STORE HERO -->
+<div class="store-hero">
+  <div class="store-hero-inner">
+    <div class="store-thumb">🏪</div>
+    <div class="store-info">
+      <div class="store-name">우아한 가게</div>
+      <div class="store-meta">
+        <span>⭐ 4.8 (리뷰 2,341개)</span>
+        <span>🕐 배달 25~35분</span>
+        <span>🚚 배달비 2,000원</span>
+        <span>💰 최소주문 10,000원</span>
+      </div>
+      <div class="store-badge" id="storeBadge">MODE: REST-MVC</div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: MENU -->
+  <div class="menu-section">
+    <div class="category-tabs">
+      <button class="cat-tab active" onclick="selectCat(this)">🔥 인기메뉴</button>
+      <button class="cat-tab" onclick="selectCat(this)">🍱 세트메뉴</button>
+      <button class="cat-tab" onclick="selectCat(this)">🥢 단품</button>
+      <button class="cat-tab" onclick="selectCat(this)">🥤 음료</button>
+    </div>
+
+    <div class="menu-list">
+      <div class="menu-header">인기메뉴</div>
+
+      <div class="menu-item" onclick="openModal(1)">
+        <div class="menu-thumb">🌶️</div>
+        <div class="menu-info">
+          <div class="menu-name">떡볶이 세트</div>
+          <div class="menu-desc">쫄깃한 떡볶이 + 튀김 3종 세트. 매콤달콤한 소스가 일품.</div>
+          <div class="menu-price">9,900원</div>
+        </div>
+        <button class="menu-add-btn" onclick="event.stopPropagation(); addToCart(1, '떡볶이 세트', 9900)">+</button>
+      </div>
+
+      <div class="menu-item" onclick="openModal(2)">
+        <div class="menu-thumb">🍗</div>
+        <div class="menu-info">
+          <div class="menu-name">치킨 한 마리</div>
+          <div class="menu-desc">바삭한 후라이드 치킨. 당일 신선한 닭만 사용합니다.</div>
+          <div class="menu-price">18,000원</div>
+        </div>
+        <button class="menu-add-btn" onclick="event.stopPropagation(); addToCart(2, '치킨 한 마리', 18000)">+</button>
+      </div>
+
+      <div class="menu-item" onclick="openModal(3)">
+        <div class="menu-thumb">🍜</div>
+        <div class="menu-info">
+          <div class="menu-name">짜장면</div>
+          <div class="menu-desc">춘장을 직접 볶아 만든 정통 짜장면. 단무지 포함.</div>
+          <div class="menu-price">7,500원</div>
+        </div>
+        <button class="menu-add-btn" onclick="event.stopPropagation(); addToCart(3, '짜장면', 7500)">+</button>
+      </div>
+
+      <div class="menu-item" onclick="openModal(4)">
+        <div class="menu-thumb">🍕</div>
+        <div class="menu-info">
+          <div class="menu-name">피자 L사이즈</div>
+          <div class="menu-desc">두툼한 도우에 풍성한 토핑. 4인 가족이 함께 즐기기 좋아요.</div>
+          <div class="menu-price">24,900원</div>
+        </div>
+        <button class="menu-add-btn" onclick="event.stopPropagation(); addToCart(4, '피자 L사이즈', 24900)">+</button>
+      </div>
+
+      <div class="menu-item" onclick="openModal(5)">
+        <div class="menu-thumb">🍣</div>
+        <div class="menu-info">
+          <div class="menu-name">초밥 세트</div>
+          <div class="menu-desc">당일 입고 신선한 생선으로 만든 프리미엄 초밥 12피스.</div>
+          <div class="menu-price">28,000원</div>
+        </div>
+        <button class="menu-add-btn" onclick="event.stopPropagation(); addToCart(5, '초밥 세트', 28000)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CART + PERF -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- CART -->
+    <div class="cart">
+      <div class="cart-header">
+        장바구니
+        <div class="cart-count" id="cartCount">0</div>
+      </div>
+      <div id="cartEmpty" class="cart-empty">
+        <div class="empty-icon">🛒</div>
+        메뉴를 담아주세요
+      </div>
+      <div id="cartItems" class="cart-items" style="display:none;"></div>
+      <div id="cartFooter" class="cart-footer" style="display:none;">
+        <div class="cart-total">
+          <span>합계</span>
+          <span id="cartTotal">0원</span>
+        </div>
+        <button class="order-btn">주문하기</button>
+      </div>
+    </div>
+
+    <!-- PERF PANEL -->
+    <div class="perf-panel">
+      <div class="perf-header">
+        <div class="perf-dot" id="perfDot"></div>
+        API 응답 모니터
+      </div>
+      <div class="perf-body">
+        <div class="perf-row">
+          <span class="perf-label">mode</span>
+          <span class="perf-value s1" id="perfMode">REST-MVC</span>
+        </div>
+        <div class="perf-row">
+          <span class="perf-label">last</span>
+          <span class="perf-value" id="perfLast">—</span>
+        </div>
+        <div class="perf-row">
+          <span class="perf-label">avg</span>
+          <span class="perf-value" id="perfAvg">—</span>
+        </div>
+      </div>
+      <div class="perf-history" id="perfHistory"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-thumb" id="modalThumb">🍽️</div>
+    <div class="modal-body">
+      <div id="modalLoading">
+        <div class="loading-skeleton" style="width:60%;height:24px;"></div>
+        <div class="loading-skeleton" style="width:40%;height:20px;margin-top:8px;"></div>
+        <div class="loading-skeleton" style="height:14px;margin-top:16px;"></div>
+        <div class="loading-skeleton" style="height:14px;width:80%;"></div>
+      </div>
+      <div id="modalContent" style="display:none;">
+        <div class="modal-top">
+          <div class="modal-name" id="modalName">—</div>
+          <div class="modal-price" id="modalPrice">—</div>
+        </div>
+        <div class="modal-desc" id="modalDesc">—</div>
+
+        <div class="modal-stats">
+          <div class="mstat">
+            <div class="mstat-label">재고</div>
+            <div class="mstat-value" id="modalStock">—</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-label">평점</div>
+            <div class="mstat-value" id="modalRating">—</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-label">리뷰</div>
+            <div class="mstat-value" id="modalReviewCount">—</div>
+          </div>
+        </div>
+
+        <div class="modal-review">
+          <strong>최근 리뷰</strong>
+          <span id="modalLatestReview">—</span>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+          <div class="modal-api-badge" id="modalApiBadge">—</div>
+          <div id="modalShopOpen"></div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="modal-qty">
+            <button class="modal-qty-btn" onclick="changeQty(-1)">−</button>
+            <div class="modal-qty-num" id="modalQty">1</div>
+            <button class="modal-qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+          <button class="modal-cart-btn" id="modalCartBtn" onclick="addFromModal()">
+            장바구니 담기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   let currentStage = 1;
-  let currentProductId = 1;
-  let timerInterval = null;
-  let startTime = null;
+  let modalProductId = null;
+  let modalQty = 1;
+  let modalProductData = null;
+  let cart = {};
+  let perfHistory = [];
+  let perfTimes = [];
 
-  const STAGE_CONFIG = {
-    1: {
-      title: 'REST MVC<br>순차 호출',
-      desc: 'inventory → review → shop 순서로 순차 호출.<br>응답시간 = 각 서비스 응답시간의 <strong>합</strong>.',
-      color: 'stage1',
-      cls: 's1',
-      maxMs: 1500,
-    },
-    2: {
-      title: 'WebFlux<br>병렬 호출',
-      desc: 'Mono.zip으로 inventory, review, shop 동시 호출.<br>응답시간 = 각 서비스 응답시간의 <strong>max</strong>.',
-      color: 'stage2',
-      cls: 's2',
-      maxMs: 700,
-    },
-    3: {
-      title: 'WebFlux<br>boundedElastic',
-      desc: 'inventory는 blocking → boundedElastic 격리.<br>review, shop은 WebClient 유지.',
-      color: 'stage3',
-      cls: 's3',
-      maxMs: 700,
-    },
-  };
+  const EMOJIS = { 1: '🌶️', 2: '🍗', 3: '🍜', 4: '🍕', 5: '🍣' };
+  const PRICES = { 1: 9900, 2: 18000, 3: 7500, 4: 24900, 5: 28000 };
+  const NAMES  = { 1: '떡볶이 세트', 2: '치킨 한 마리', 3: '짜장면', 4: '피자 L사이즈', 5: '초밥 세트' };
+
+  const STAGE_LABELS = { 1: 'REST-MVC', 2: 'PARALLEL', 3: 'BOUNDED' };
+  const STAGE_COLORS = { 1: 's1', 2: 's2', 3: 's3' };
 
   function switchStage(stage) {
     currentStage = stage;
-    const cfg = STAGE_CONFIG[stage];
+    document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector(`.stage-btn[data-stage="${stage}"]`);
+    btn.classList.add('active');
 
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`.tab[data-stage="${stage}"]`).classList.add('active');
-
-    document.getElementById('stageTitle').className = `stage-title s${stage}`;
-    document.getElementById('stageTitle').innerHTML = cfg.title;
-    document.getElementById('stageDesc').innerHTML = cfg.desc;
-
-    const btn = document.getElementById('fetchBtn');
-    btn.dataset.stage = stage;
-    btn.textContent = '상품 조회하기';
-
-    const pb = document.getElementById('progressBar');
-    pb.className = `progress-bar s${stage}`;
-    pb.style.width = '0%';
-
-    document.getElementById('timerDisplay').className = 'timer-display';
-    document.getElementById('timerDisplay').innerHTML = '0<span class="timer-unit">ms</span>';
-    document.getElementById('productCard').classList.remove('visible');
-    document.getElementById('errorMsg').style.display = 'none';
-
-    updateFlowDiagram(stage, null);
+    document.getElementById('storeBadge').textContent = `MODE: ${STAGE_LABELS[stage]}`;
+    document.getElementById('perfMode').textContent = STAGE_LABELS[stage];
+    document.getElementById('perfMode').className = `perf-value ${STAGE_COLORS[stage]}`;
   }
 
-  function selectProduct(id, el) {
-    currentProductId = id;
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  function selectCat(el) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
   }
 
-  function updateFlowDiagram(stage, activeStep) {
-    const lines = ['fl-product', 'fl-inv', 'fl-rev', 'fl-shop'];
-    lines.forEach(id => {
-      const el = document.getElementById(id);
-      el.classList.remove('active', 'parallel');
-    });
+  async function openModal(productId) {
+    modalProductId = productId;
+    modalQty = 1;
+    modalProductData = null;
 
-    if (activeStep === null) {
-      document.getElementById('fl-product').classList.add('active');
-      return;
-    }
+    document.getElementById('modalThumb').textContent = EMOJIS[productId];
+    document.getElementById('modalQty').textContent = '1';
+    document.getElementById('modalLoading').style.display = 'block';
+    document.getElementById('modalContent').style.display = 'none';
+    document.getElementById('modalOverlay').classList.add('open');
 
-    document.getElementById('fl-product').classList.add('active');
+    const perfDot = document.getElementById('perfDot');
+    perfDot.classList.add('active');
 
-    if (stage === 1) {
-      if (activeStep >= 1) document.getElementById('fl-inv').classList.add('active');
-      if (activeStep >= 2) document.getElementById('fl-rev').classList.add('active');
-      if (activeStep >= 3) document.getElementById('fl-shop').classList.add('active');
-    } else {
-      ['fl-inv', 'fl-rev', 'fl-shop'].forEach(id => {
-        document.getElementById(id).classList.add('active', 'parallel');
-      });
-    }
-  }
-
-  async function fetchProduct() {
-    const btn = document.getElementById('fetchBtn');
-    btn.disabled = true;
-    document.getElementById('productCard').classList.remove('visible');
-    document.getElementById('errorMsg').style.display = 'none';
-
-    const cfg = STAGE_CONFIG[currentStage];
-    const timerEl = document.getElementById('timerDisplay');
-    const pb = document.getElementById('progressBar');
-
-    timerEl.className = 'timer-display running';
-    pb.style.width = '0%';
-
-    startTime = Date.now();
-
-    if (currentStage === 1) {
-      let step = 0;
-      updateFlowDiagram(1, 0);
-      timerInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-        pb.style.width = Math.min((elapsed / cfg.maxMs) * 100, 100) + '%';
-
-        if (elapsed > 500 && step < 1) { step = 1; updateFlowDiagram(1, 1); }
-        if (elapsed > 800 && step < 2) { step = 2; updateFlowDiagram(1, 2); }
-        if (elapsed > 1100 && step < 3) { step = 3; updateFlowDiagram(1, 3); }
-      }, 30);
-    } else {
-      updateFlowDiagram(currentStage, 1);
-      timerInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-        pb.style.width = Math.min((elapsed / cfg.maxMs) * 100, 100) + '%';
-      }, 30);
-    }
+    const start = Date.now();
 
     try {
-      const res = await fetch(`http://localhost:8080/product/${currentProductId}`);
-      clearInterval(timerInterval);
-
-      const elapsed = Date.now() - startTime;
-      timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-      timerEl.className = `timer-display done-${currentStage}`;
-      pb.style.width = '100%';
+      const res = await fetch(`http://localhost:8080/product/${productId}`);
+      const elapsed = Date.now() - start;
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
-      renderCard(data);
-      addHistory(currentStage, data.elapsedMs || elapsed);
+      modalProductData = data;
+
+      document.getElementById('modalName').textContent = data.name;
+      document.getElementById('modalPrice').textContent = data.price.toLocaleString() + '원';
+      document.getElementById('modalDesc').textContent = data.description;
+      document.getElementById('modalStock').textContent = `${data.stock}개`;
+      document.getElementById('modalRating').textContent = `⭐ ${data.rating}`;
+      document.getElementById('modalReviewCount').textContent = `${data.reviewCount}개`;
+      document.getElementById('modalLatestReview').textContent = data.latestReview;
+
+      const badge = document.getElementById('modalApiBadge');
+      badge.className = `modal-api-badge ${STAGE_COLORS[currentStage]}`;
+      badge.textContent = `${STAGE_LABELS[currentStage]} · ${data.elapsedMs}ms`;
+
+      const openEl = document.getElementById('modalShopOpen');
+      if (data.shopOpen) {
+        openEl.innerHTML = `<span class="shop-open-badge open">🟢 영업중</span>`;
+      } else {
+        openEl.innerHTML = `<span class="shop-open-badge closed">🔴 마감</span>`;
+      }
+
+      document.getElementById('modalCartBtn').textContent = `장바구니 담기`;
+
+      document.getElementById('modalLoading').style.display = 'none';
+      document.getElementById('modalContent').style.display = 'block';
+
+      addPerfRecord(currentStage, elapsed);
+
     } catch (e) {
-      clearInterval(timerInterval);
-      const elapsed = Date.now() - startTime;
-      timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-      timerEl.className = 'timer-display done-1';
-      document.getElementById('errorMsg').textContent = `오류: ${e.message} — 서비스가 실행 중인지 확인하세요.`;
-      document.getElementById('errorMsg').style.display = 'block';
+      document.getElementById('modalLoading').innerHTML = `
+        <div style="color:#e05252;font-size:13px;text-align:center;padding:20px;">
+          서비스에 연결할 수 없습니다.<br>
+          <span style="color:#aaa;font-size:12px;">서버가 실행 중인지 확인하세요.</span>
+        </div>`;
+      addPerfRecord(currentStage, Date.now() - start, true);
     }
 
-    btn.disabled = false;
+    perfDot.classList.remove('active');
   }
 
-  function renderCard(data) {
-    document.getElementById('cardName').textContent = data.name;
-    document.getElementById('cardPrice').textContent = data.price.toLocaleString() + '원';
-    document.getElementById('cardDesc').textContent = data.description;
-    document.getElementById('cardStock').textContent = `${data.stock}개 (${data.stockStatus})`;
-    document.getElementById('cardRating').textContent = `⭐ ${data.rating}`;
-    document.getElementById('cardReview').textContent = `${data.reviewCount}개`;
-    document.getElementById('cardShop').textContent = data.shopName;
-    document.getElementById('cardCategory').textContent = data.category;
-    document.getElementById('cardOpen').textContent = data.shopOpen ? '🟢 영업중' : '🔴 마감';
-
-    const badge = document.getElementById('elapsedBadge');
-    badge.className = `elapsed-badge s${currentStage}`;
-    badge.textContent = `서버 측정: ${data.elapsedMs}ms`;
-
-    document.getElementById('productCard').classList.add('visible');
+  function closeModalOnBg(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
   }
 
-  function addHistory(stage, ms) {
-    const cfg = STAGE_CONFIG[stage];
-    const labels = { 1: 'REST-MVC', 2: 'PARALLEL', 3: 'BOUNDED' };
-    const list = document.getElementById('historyList');
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  function changeQty(delta) {
+    modalQty = Math.max(1, modalQty + delta);
+    document.getElementById('modalQty').textContent = modalQty;
+    if (modalProductData) {
+      const total = (PRICES[modalProductId] * modalQty).toLocaleString();
+      document.getElementById('modalCartBtn').textContent = `${total}원 담기`;
+    }
+  }
+
+  function addFromModal() {
+    if (!modalProductData) return;
+    addToCart(modalProductId, NAMES[modalProductId], PRICES[modalProductId], modalQty);
+    closeModal();
+  }
+
+  function addToCart(id, name, price, qty = 1) {
+    if (cart[id]) {
+      cart[id].qty += qty;
+    } else {
+      cart[id] = { name, price, qty };
+    }
+    renderCart();
+  }
+
+  function changeCartQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id].qty += delta;
+    if (cart[id].qty <= 0) delete cart[id];
+    renderCart();
+  }
+
+  function renderCart() {
+    const keys = Object.keys(cart);
+    const countEl = document.getElementById('cartCount');
+    const emptyEl = document.getElementById('cartEmpty');
+    const itemsEl = document.getElementById('cartItems');
+    const footerEl = document.getElementById('cartFooter');
+
+    const totalQty = keys.reduce((s, k) => s + cart[k].qty, 0);
+    countEl.textContent = totalQty;
+
+    if (keys.length === 0) {
+      emptyEl.style.display = 'block';
+      itemsEl.style.display = 'none';
+      footerEl.style.display = 'none';
+      return;
+    }
+
+    emptyEl.style.display = 'none';
+    itemsEl.style.display = 'block';
+    footerEl.style.display = 'flex';
+
+    let html = '';
+    let total = 0;
+    keys.forEach(id => {
+      const item = cart[id];
+      total += item.price * item.qty;
+      html += `
+        <div class="cart-item">
+          <span style="font-size:18px;">${EMOJIS[id]}</span>
+          <span class="cart-item-name">${item.name}</span>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="changeCartQty(${id}, -1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeCartQty(${id}, 1)">+</button>
+          </div>
+          <span class="cart-item-price">${(item.price * item.qty).toLocaleString()}원</span>
+        </div>`;
+    });
+
+    itemsEl.innerHTML = html;
+    document.getElementById('cartTotal').textContent = total.toLocaleString() + '원';
+  }
+
+  function addPerfRecord(stage, ms, isError = false) {
+    perfTimes.push(ms);
+    if (perfTimes.length > 10) perfTimes.shift();
+
+    const avg = Math.round(perfTimes.reduce((a, b) => a + b, 0) / perfTimes.length);
+    const cls = STAGE_COLORS[stage];
+
+    document.getElementById('perfLast').textContent = `${ms}ms`;
+    document.getElementById('perfLast').className = `perf-value ${cls}`;
+    document.getElementById('perfAvg').textContent = `${avg}ms`;
+    document.getElementById('perfAvg').className = `perf-value ${cls}`;
+
+    const histEl = document.getElementById('perfHistory');
     const item = document.createElement('div');
-    item.className = 'history-item';
+    item.className = 'perf-hist-item';
     item.innerHTML = `
-      <span class="history-badge s${stage}">${labels[stage]}</span>
-      <span>상품 #${currentProductId}</span>
-      <span class="history-ms s${stage}">${ms}ms</span>
-    `;
-    list.insertBefore(item, list.firstChild);
-    if (list.children.length > 8) list.removeChild(list.lastChild);
+      <span class="phist-stage ${cls}">${STAGE_LABELS[stage]}</span>
+      <span style="color:#aaa;">${new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit', second:'2-digit'})}</span>
+      <span class="phist-ms ${isError ? 'style="color:var(--stage1)"' : ''}">${ms}ms</span>`;
+    histEl.insertBefore(item, histEl.firstChild);
+    if (histEl.children.length > 5) histEl.removeChild(histEl.lastChild);
   }
+
+  // close modal on ESC
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>
