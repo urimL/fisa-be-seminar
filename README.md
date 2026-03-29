@@ -1,7 +1,5 @@
 # MSA 환경에서 WebFlux 적용하기
-
-> WebFlux는 유행 기술이 아니라,
-> MSA의 fan-out 호출 구간에서 자원 효율을 높이기 위한 선택지다.
+로 MSA의 fan-out 호출 구간에서의 자원 효율 높이기
 
 ---
 
