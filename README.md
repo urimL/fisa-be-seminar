@@ -1,5 +1,5 @@
 # MSA 환경에서 WebFlux 적용하기
-로 MSA의 fan-out 호출 구간에서의 자원 효율 높이기
+> Weblux로 MSA의 fan-out 호출 구간에서의 자원 효율 높이기
 
 ---
 
