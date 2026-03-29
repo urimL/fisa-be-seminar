@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class ShopController {
 
     @GetMapping("/shop/product/{productId}")
-    public ResponseEntity<ShopResponse> getShop(@PathVariable Long productId)
+    public ResponseEntity<ShopResponse> getShop(@PathVariable("productId") Long productId)
             throws InterruptedException {
         log.info("[shop] 가게 조회 요청 - productId: {}", productId);
         Thread.sleep(400);

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 public class InventoryController {
 
     @GetMapping("/inventory/{productId}")
-    public ResponseEntity<InventoryResponse> getInventory(@PathVariable Long productId)
+    public ResponseEntity<InventoryResponse> getInventory(@PathVariable("productId") Long productId)
             throws InterruptedException {
         log.info("[inventory] 재고 조회 요청 - productId: {}", productId);
-        Thread.sleep(500);
+        Thread.sleep(1500);
         return ResponseEntity.ok(new InventoryResponse(productId, 42, "IN_STOCK"));
     }
 }

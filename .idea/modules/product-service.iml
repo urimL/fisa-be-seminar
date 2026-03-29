@@ -6,6 +6,11 @@
       <excludeFolder url="file://$MODULE_DIR$/../../product-service/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../product-service/build" />
     </content>
+    <content url="file://$MODULE_DIR$/../../product-service">
+      <excludeFolder url="file://$MODULE_DIR$/../../product-service/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../product-service/build" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../product-service" />
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

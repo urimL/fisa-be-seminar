@@ -13,6 +13,12 @@
     <content url="file://$MODULE_DIR$/../../review-service/src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../review-service/src/test/java" isTestSource="true" />
     </content>
+    <content url="file://$MODULE_DIR$/../../review-service/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../review-service/src/test/java" isTestSource="true" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../review-service/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../review-service/src/test/java" isTestSource="true" />
+    </content>
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="review-service.main" />

@@ -1,688 +1,552 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WebFlux Demo</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --border: #1e1e1e;
-    --text: #e8e8e8;
-    --muted: #555;
-    --stage1: #e05252;
-    --stage2: #52b788;
-    --stage3: #5e9bdb;
-    --accent: #f0c040;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>빠른배달</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --border: #ebebeb;
+      --text: #1a1a1a;
+      --muted: #888;
+      --stage1: #e05252;
+      --stage2: #27ae60;
+      --stage3: #5e9bdb;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; min-height: 100vh; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+    /* NAV */
+    .top-nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  header {
-    padding: 28px 48px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+    .nav-logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -0.5px; }
 
-  .logo {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-  }
+    .nav-address { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); margin-left: 8px; }
+    .nav-address strong { color: var(--text); font-weight: 500; }
 
-  .logo span {
-    color: var(--accent);
-  }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 
-  .stage-tabs {
-    display: flex;
-    gap: 8px;
-    margin-left: auto;
-  }
+    .stage-switcher { display: flex; gap: 4px; background: #f0f0f0; padding: 4px; border-radius: 8px; }
 
-  .tab {
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    transition: all 0.2s;
-    letter-spacing: 0.05em;
-  }
+    .stage-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 500;
+      transition: all 0.15s;
+    }
 
-  .tab:hover { color: var(--text); border-color: #333; }
+    .stage-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .stage-btn.active.s1 { color: var(--stage1); }
+    .stage-btn.active.s2 { color: var(--stage2); }
+    .stage-btn.active.s3 { color: var(--stage3); }
 
-  .tab.active[data-stage="1"] { background: var(--stage1); border-color: var(--stage1); color: #fff; }
-  .tab.active[data-stage="2"] { background: var(--stage2); border-color: var(--stage2); color: #0a0a0a; }
-  .tab.active[data-stage="3"] { background: var(--stage3); border-color: var(--stage3); color: #fff; }
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 28px 24px;
+      color: white;
+    }
 
-  main {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 0;
-  }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
 
-  .left-panel {
-    border-right: 1px solid var(--border);
-    padding: 40px 36px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
+    .hero-left {}
+    .hero-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .hero-title span { color: var(--primary); }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
 
-  .stage-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+    .reload-btn {
+      padding: 10px 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
 
-  .stage-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
+    .reload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .reload-btn:hover:not(:disabled) { opacity: 0.85; }
 
-  .stage-title {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.3;
-  }
+    /* LAYOUT */
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 24px;
+      align-items: start;
+    }
 
-  .stage-title.s1 { color: var(--stage1); }
-  .stage-title.s2 { color: var(--stage2); }
-  .stage-title.s3 { color: var(--stage3); }
+    /* PRODUCT GRID */
+    .product-grid { display: flex; flex-direction: column; gap: 12px; }
 
-  .stage-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+    .grid-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
 
-  .flow-diagram {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    line-height: 2;
-  }
+    .grid-title { font-size: 16px; font-weight: 700; }
 
-  .flow-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--muted);
-    transition: color 0.3s;
-  }
+    .grid-subtitle { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-  .flow-line.active { color: var(--text); }
-  .flow-line .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.3s; }
-  .flow-line.active .dot { background: var(--accent); }
-  .flow-line.parallel.active .dot { background: var(--stage2); }
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: box-shadow 0.15s;
+      cursor: default;
+    }
 
-  .product-select {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+    .product-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 
-  .select-label {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
-  }
+    .product-emoji {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
 
-  .product-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+    .product-info { flex: 1; min-width: 0; }
 
-  .pill {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--muted);
-    background: transparent;
-  }
+    .product-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 
-  .pill:hover { border-color: #444; color: var(--text); }
-  .pill.active { border-color: var(--accent); color: var(--accent); }
+    .product-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
 
-  .fetch-btn {
-    padding: 14px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.03em;
-  }
+    .product-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-  .fetch-btn[data-stage="1"] { background: var(--stage1); color: #fff; }
-  .fetch-btn[data-stage="2"] { background: var(--stage2); color: #0a0a0a; }
-  .fetch-btn[data-stage="3"] { background: var(--stage3); color: #fff; }
-  .fetch-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-  .fetch-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
 
-  .right-panel {
-    padding: 40px 48px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
+    .meta-chip.green { background: rgba(39,174,96,0.08); border-color: rgba(39,174,96,0.2); color: var(--stage2); }
+    .meta-chip.red   { background: rgba(224,82,82,0.08); border-color: rgba(224,82,82,0.2); color: var(--stage1); }
+    .meta-chip.blue  { background: rgba(94,155,219,0.08); border-color: rgba(94,155,219,0.2); color: var(--stage3); }
 
-  .timer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+    .product-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+    }
 
-  .timer-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
+    .product-price { font-size: 17px; font-weight: 700; }
 
-  .timer-display {
-    font-family: 'DM Mono', monospace;
-    font-size: 72px;
-    font-weight: 500;
-    line-height: 1;
-    transition: color 0.3s;
-    color: var(--text);
-  }
+    .elapsed-chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
 
-  .timer-display.running { color: var(--accent); }
-  .timer-display.done-1 { color: var(--stage1); }
-  .timer-display.done-2 { color: var(--stage2); }
-  .timer-display.done-3 { color: var(--stage3); }
+    .elapsed-chip.s1 { background: rgba(224,82,82,0.08); color: var(--stage1); border: 1px solid rgba(224,82,82,0.2); }
+    .elapsed-chip.s2 { background: rgba(39,174,96,0.08); color: var(--stage2); border: 1px solid rgba(39,174,96,0.2); }
+    .elapsed-chip.s3 { background: rgba(94,155,219,0.08); color: var(--stage3); border: 1px solid rgba(94,155,219,0.2); }
 
-  .timer-unit {
-    font-size: 18px;
-    color: var(--muted);
-    margin-left: 4px;
-  }
+    /* SKELETON */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 6px;
+    }
 
-  .progress-bar-wrap {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    width: 100%;
-  }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-  .progress-bar {
-    height: 100%;
-    width: 0%;
-    border-radius: 2px;
-    transition: width 0.1s linear;
-  }
+    .product-card.loaded { animation: fadeIn 0.3s ease; }
 
-  .progress-bar.s1 { background: var(--stage1); }
-  .progress-bar.s2 { background: var(--stage2); }
-  .progress-bar.s3 { background: var(--stage3); }
+    /* PERF PANEL */
+    .perf-panel {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: sticky;
+      top: 76px;
+    }
 
-  .history {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+    .perf-header {
+      padding: 14px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: 'DM Mono', monospace;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-  .history-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
+    .perf-dot { width: 6px; height: 6px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+    .perf-dot.active { background: var(--stage2); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  .history-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    animation: fadeIn 0.3s ease;
-  }
+    .perf-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
 
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .perf-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    .perf-label { color: var(--muted); font-family: 'DM Mono', monospace; }
+    .perf-value { font-family: 'DM Mono', monospace; font-weight: 600; font-size: 13px; }
+    .perf-value.s1 { color: var(--stage1); }
+    .perf-value.s2 { color: var(--stage2); }
+    .perf-value.s3 { color: var(--stage3); }
 
-  .history-badge {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-  }
+    .perf-divider { height: 1px; background: var(--border); margin: 2px 0; }
 
-  .history-badge.s1 { background: rgba(224,82,82,0.15); color: var(--stage1); }
-  .history-badge.s2 { background: rgba(82,183,136,0.15); color: var(--stage2); }
-  .history-badge.s3 { background: rgba(94,155,219,0.15); color: var(--stage3); }
+    .perf-breakdown { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 6px; }
 
-  .history-ms { margin-left: auto; font-weight: 500; }
-  .history-ms.s1 { color: var(--stage1); }
-  .history-ms.s2 { color: var(--stage2); }
-  .history-ms.s3 { color: var(--stage3); }
+    .breakdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+    }
 
-  .product-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    display: none;
-    flex-direction: column;
-    gap: 16px;
-    animation: fadeIn 0.4s ease;
-  }
+    .breakdown-emoji { font-size: 14px; width: 20px; text-align: center; }
+    .breakdown-name { flex: 1; color: var(--muted); }
+    .breakdown-bar-wrap { width: 80px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .breakdown-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+    .breakdown-ms { min-width: 48px; text-align: right; font-weight: 500; }
 
-  .product-card.visible { display: flex; }
+    .perf-history-title {
+      padding: 10px 16px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: 'DM Mono', monospace;
+      border-top: 1px solid var(--border);
+    }
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+    .perf-history { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 4px; }
 
-  .card-name {
-    font-size: 20px;
-    font-weight: 700;
-  }
+    .hist-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--bg);
+      animation: fadeIn 0.2s ease;
+    }
 
-  .card-price {
-    font-family: 'DM Mono', monospace;
-    font-size: 18px;
-    color: var(--accent);
-  }
-
-  .card-desc {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .card-stat {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .stat-label {
-    font-size: 10px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .stat-value {
-    font-size: 15px;
-    font-weight: 500;
-  }
-
-  .elapsed-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    align-self: flex-start;
-  }
-
-  .elapsed-badge.s1 { background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.3); color: var(--stage1); }
-  .elapsed-badge.s2 { background: rgba(82,183,136,0.1); border: 1px solid rgba(82,183,136,0.3); color: var(--stage2); }
-  .elapsed-badge.s3 { background: rgba(94,155,219,0.1); border: 1px solid rgba(94,155,219,0.3); color: var(--stage3); }
-
-  .error-msg {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--stage1);
-    padding: 12px;
-    background: rgba(224,82,82,0.08);
-    border: 1px solid rgba(224,82,82,0.2);
-    border-radius: 6px;
-    display: none;
-  }
-
-  .divider { height: 1px; background: var(--border); }
-</style>
+    .hist-mode.s1 { color: var(--stage1); font-weight: 600; }
+    .hist-mode.s2 { color: var(--stage2); font-weight: 600; }
+    .hist-mode.s3 { color: var(--stage3); font-weight: 600; }
+    .hist-time { color: var(--muted); }
+    .hist-ms { font-weight: 600; }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">fisa-be-seminar / <span>webflux-demo</span></div>
-  <div class="stage-tabs">
-    <button class="tab active" data-stage="1" onclick="switchStage(1)">Stage 1</button>
-    <button class="tab" data-stage="2" onclick="switchStage(2)">Stage 2</button>
-    <button class="tab" data-stage="3" onclick="switchStage(3)">Stage 3</button>
+<nav class="top-nav">
+  <div class="nav-logo">🛵 빠른배달</div>
+  <div class="nav-address">
+    <span>📍</span>
+    <span><strong>서울시 마포구</strong> 월드컵북로 434 상암 IT 타워</span>
   </div>
-</header>
-
-<main>
-  <div class="left-panel">
-    <div class="stage-info">
-      <div class="stage-label">현재 스테이지</div>
-      <div class="stage-title s1" id="stageTitle">REST MVC<br>순차 호출</div>
-      <div class="stage-desc" id="stageDesc">
-        inventory → review → shop 순서로 순차 호출.<br>
-        응답시간 = 각 서비스 응답시간의 <strong>합</strong>.
-      </div>
-    </div>
-
-    <div class="flow-diagram" id="flowDiagram">
-      <div class="flow-line active" id="fl-product">
-        <div class="dot"></div>product-service
-      </div>
-      <div class="flow-line" id="fl-inv" style="padding-left:16px">
-        <div class="dot"></div>→ inventory (500ms)
-      </div>
-      <div class="flow-line" id="fl-rev" style="padding-left:16px">
-        <div class="dot"></div>→ review (300ms)
-      </div>
-      <div class="flow-line" id="fl-shop" style="padding-left:16px">
-        <div class="dot"></div>→ shop (400ms)
-      </div>
-    </div>
-
-    <div class="product-select">
-      <div class="select-label">상품 선택</div>
-      <div class="product-pills">
-        <button class="pill active" onclick="selectProduct(1, this)">떡볶이 세트</button>
-        <button class="pill" onclick="selectProduct(2, this)">치킨 한 마리</button>
-        <button class="pill" onclick="selectProduct(3, this)">짜장면</button>
-        <button class="pill" onclick="selectProduct(4, this)">피자 L사이즈</button>
-        <button class="pill" onclick="selectProduct(5, this)">초밥 세트</button>
-      </div>
-    </div>
-
-    <button class="fetch-btn" data-stage="1" id="fetchBtn" onclick="fetchProduct()">
-      상품 조회하기
-    </button>
-  </div>
-
-  <div class="right-panel">
-    <div class="timer-section">
-      <div class="timer-label">응답시간</div>
-      <div class="timer-display" id="timerDisplay">
-        0<span class="timer-unit">ms</span>
-      </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar s1" id="progressBar"></div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="error-msg" id="errorMsg"></div>
-
-    <div class="product-card" id="productCard">
-      <div class="card-header">
-        <div class="card-name" id="cardName">—</div>
-        <div class="card-price" id="cardPrice">—</div>
-      </div>
-      <div class="card-desc" id="cardDesc">—</div>
-      <div class="card-grid">
-        <div class="card-stat">
-          <div class="stat-label">재고</div>
-          <div class="stat-value" id="cardStock">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">평점</div>
-          <div class="stat-value" id="cardRating">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">리뷰</div>
-          <div class="stat-value" id="cardReview">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">가게</div>
-          <div class="stat-value" id="cardShop">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">카테고리</div>
-          <div class="stat-value" id="cardCategory">—</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">영업</div>
-          <div class="stat-value" id="cardOpen">—</div>
-        </div>
-      </div>
-      <div class="elapsed-badge s1" id="elapsedBadge">서버 측정: —ms</div>
-    </div>
-
-    <div class="history">
-      <div class="history-label">조회 기록</div>
-      <div id="historyList"></div>
+  <div class="nav-right">
+    <div class="stage-switcher">
+      <button class="stage-btn active s1" data-stage="1" onclick="switchStage(1)">REST-MVC</button>
+      <button class="stage-btn s2" data-stage="2" onclick="switchStage(2)">PARALLEL</button>
+      <button class="stage-btn s3" data-stage="3" onclick="switchStage(3)">BOUNDED</button>
     </div>
   </div>
-</main>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-title">상품 목록을 불러올 때 <span>재고 · 리뷰 · 가게</span> 서비스를 동시에 호출합니다</div>
+      <div class="hero-desc">product-service → inventory / review / shop 세 서비스 fan-out 호출<br>Stage를 전환하고 새로고침을 눌러 응답 속도 차이를 확인하세요.</div>
+    </div>
+    <button class="reload-btn" id="reloadBtn" onclick="loadAllProducts()">🔄 새로고침</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- PRODUCT LIST -->
+  <div class="product-grid">
+    <div class="grid-header">
+      <div class="grid-title">전체 상품</div>
+      <div class="grid-subtitle" id="gridSubtitle">—</div>
+    </div>
+    <div id="productList"></div>
+  </div>
+
+  <!-- PERF PANEL -->
+  <div class="perf-panel">
+    <div class="perf-header">
+      <div class="perf-dot" id="perfDot"></div>
+      API 응답 모니터
+    </div>
+    <div class="perf-body">
+      <div class="perf-row">
+        <span class="perf-label">mode</span>
+        <span class="perf-value s1" id="perfMode">REST-MVC</span>
+      </div>
+      <div class="perf-row">
+        <span class="perf-label">total</span>
+        <span class="perf-value" id="perfTotal">—</span>
+      </div>
+      <div class="perf-row">
+        <span class="perf-label">avg / item</span>
+        <span class="perf-value" id="perfAvg">—</span>
+      </div>
+    </div>
+
+    <div class="perf-divider"></div>
+
+    <div class="perf-breakdown" id="perfBreakdown">
+      <div class="breakdown-item" style="opacity:0.4;">
+        <span class="breakdown-emoji">—</span>
+        <span class="breakdown-name">조회 대기 중</span>
+      </div>
+    </div>
+
+    <div class="perf-history-title">최근 조회 기록</div>
+    <div class="perf-history" id="perfHistory"></div>
+  </div>
+
+</div>
 
 <script>
   let currentStage = 1;
-  let currentProductId = 1;
-  let timerInterval = null;
-  let startTime = null;
 
-  const STAGE_CONFIG = {
-    1: {
-      title: 'REST MVC<br>순차 호출',
-      desc: 'inventory → review → shop 순서로 순차 호출.<br>응답시간 = 각 서비스 응답시간의 <strong>합</strong>.',
-      color: 'stage1',
-      cls: 's1',
-      maxMs: 1500,
-    },
-    2: {
-      title: 'WebFlux<br>병렬 호출',
-      desc: 'Mono.zip으로 inventory, review, shop 동시 호출.<br>응답시간 = 각 서비스 응답시간의 <strong>max</strong>.',
-      color: 'stage2',
-      cls: 's2',
-      maxMs: 700,
-    },
-    3: {
-      title: 'WebFlux<br>boundedElastic',
-      desc: 'inventory는 blocking → boundedElastic 격리.<br>review, shop은 WebClient 유지.',
-      color: 'stage3',
-      cls: 's3',
-      maxMs: 700,
-    },
-  };
+  const PRODUCTS = [
+    { id: 1, emoji: '🌶️', name: '떡볶이 세트',  price: 9900,  desc: '쫄깃한 떡볶이 + 튀김 3종 세트. 매콤달콤한 소스가 일품.' },
+    { id: 2, emoji: '🍗', name: '치킨 한 마리', price: 18000, desc: '바삭한 후라이드 치킨. 당일 신선한 닭만 사용합니다.' },
+    { id: 3, emoji: '🍜', name: '짜장면',        price: 7500,  desc: '춘장을 직접 볶아 만든 정통 짜장면. 단무지 포함.' },
+    { id: 4, emoji: '🍕', name: '피자 L사이즈', price: 24900, desc: '두툼한 도우에 풍성한 토핑. 4인 가족이 함께 즐기기 좋아요.' },
+    { id: 5, emoji: '🍣', name: '초밥 세트',     price: 28000, desc: '당일 입고 신선한 생선으로 만든 프리미엄 초밥 12피스.' },
+  ];
+
+  const STAGE_LABELS = { 1: 'REST-MVC', 2: 'PARALLEL', 3: 'BOUNDED' };
+  const STAGE_COLORS = { 1: 's1', 2: 's2', 3: 's3' };
 
   function switchStage(stage) {
     currentStage = stage;
-    const cfg = STAGE_CONFIG[stage];
-
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`.tab[data-stage="${stage}"]`).classList.add('active');
-
-    document.getElementById('stageTitle').className = `stage-title s${stage}`;
-    document.getElementById('stageTitle').innerHTML = cfg.title;
-    document.getElementById('stageDesc').innerHTML = cfg.desc;
-
-    const btn = document.getElementById('fetchBtn');
-    btn.dataset.stage = stage;
-    btn.textContent = '상품 조회하기';
-
-    const pb = document.getElementById('progressBar');
-    pb.className = `progress-bar s${stage}`;
-    pb.style.width = '0%';
-
-    document.getElementById('timerDisplay').className = 'timer-display';
-    document.getElementById('timerDisplay').innerHTML = '0<span class="timer-unit">ms</span>';
-    document.getElementById('productCard').classList.remove('visible');
-    document.getElementById('errorMsg').style.display = 'none';
-
-    updateFlowDiagram(stage, null);
+    document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector(`.stage-btn[data-stage="${stage}"]`);
+    btn.classList.add('active');
+    document.getElementById('perfMode').textContent = STAGE_LABELS[stage];
+    document.getElementById('perfMode').className = `perf-value ${STAGE_COLORS[stage]}`;
+    loadAllProducts();
   }
 
-  function selectProduct(id, el) {
-    currentProductId = id;
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
+  function renderSkeletons() {
+    const list = document.getElementById('productList');
+    list.innerHTML = PRODUCTS.map(p => `
+      <div class="product-card" id="card-${p.id}">
+        <div class="product-emoji">${p.emoji}</div>
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-desc">${p.desc}</div>
+          <div class="product-meta">
+            <div class="skeleton" style="width:70px;height:20px;"></div>
+            <div class="skeleton" style="width:60px;height:20px;"></div>
+            <div class="skeleton" style="width:80px;height:20px;"></div>
+          </div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">${p.price.toLocaleString()}원</div>
+          <div class="skeleton" style="width:60px;height:20px;"></div>
+        </div>
+      </div>
+    `).join('');
   }
 
-  function updateFlowDiagram(stage, activeStep) {
-    const lines = ['fl-product', 'fl-inv', 'fl-rev', 'fl-shop'];
-    lines.forEach(id => {
-      const el = document.getElementById(id);
-      el.classList.remove('active', 'parallel');
+  function renderCard(p, data, elapsed) {
+    const cls = STAGE_COLORS[currentStage];
+    const stockChip = data.stock > 0
+            ? `<span class="meta-chip green">📦 재고 ${data.stock}개</span>`
+            : `<span class="meta-chip red">📦 품절</span>`;
+    const openChip = data.shopOpen
+            ? `<span class="meta-chip green">🟢 ${data.shopName}</span>`
+            : `<span class="meta-chip red">🔴 ${data.shopName}</span>`;
+    const ratingChip = `<span class="meta-chip blue">⭐ ${data.rating} (${data.reviewCount})</span>`;
+
+    const card = document.getElementById(`card-${p.id}`);
+    card.classList.add('loaded');
+    card.innerHTML = `
+      <div class="product-emoji">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name">${data.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-meta">
+          ${stockChip}
+          ${ratingChip}
+          ${openChip}
+        </div>
+      </div>
+      <div class="product-right">
+        <div class="product-price">${data.price.toLocaleString()}원</div>
+        <div class="elapsed-chip ${cls}">${elapsed}ms</div>
+      </div>
+    `;
+  }
+
+  function renderErrorCard(p, elapsed) {
+    const card = document.getElementById(`card-${p.id}`);
+    card.innerHTML = `
+      <div class="product-emoji" style="opacity:0.4;">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name" style="color:var(--muted);">${p.name}</div>
+        <div class="product-desc" style="color:#e05252;">서비스에 연결할 수 없습니다.</div>
+      </div>
+      <div class="product-right">
+        <div class="product-price" style="color:var(--muted);">${p.price.toLocaleString()}원</div>
+      </div>
+    `;
+  }
+
+  async function loadAllProducts() {
+    const btn = document.getElementById('reloadBtn');
+    const dot = document.getElementById('perfDot');
+    btn.disabled = true;
+    dot.classList.add('active');
+    document.getElementById('gridSubtitle').textContent = '불러오는 중...';
+
+    renderSkeletons();
+
+    const totalStart = Date.now();
+    const times = [];
+
+    // 5개 동시 요청
+    const results = await Promise.allSettled(
+            PRODUCTS.map(async (p) => {
+              const start = Date.now();
+              const res = await fetch(`http://localhost:8080/product/${p.id}`);
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              const data = await res.json();
+              const elapsed = Date.now() - start;
+              return { p, data, elapsed };
+            })
+    );
+
+    const totalElapsed = Date.now() - totalStart;
+
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') {
+        const { p, data, elapsed } = r.value;
+        times.push(elapsed);
+        renderCard(p, data, elapsed);
+      } else {
+        renderErrorCard(PRODUCTS[i], 0);
+      }
     });
 
-    if (activeStep === null) {
-      document.getElementById('fl-product').classList.add('active');
-      return;
-    }
+    const cls = STAGE_COLORS[currentStage];
+    const avg = times.length ? Math.round(times.reduce((a,b) => a+b, 0) / times.length) : 0;
 
-    document.getElementById('fl-product').classList.add('active');
+    document.getElementById('gridSubtitle').textContent = `${STAGE_LABELS[currentStage]} · 총 ${totalElapsed}ms`;
+    document.getElementById('perfTotal').textContent = `${totalElapsed}ms`;
+    document.getElementById('perfTotal').className = `perf-value ${cls}`;
+    document.getElementById('perfAvg').textContent = `${avg}ms`;
+    document.getElementById('perfAvg').className = `perf-value ${cls}`;
 
-    if (stage === 1) {
-      if (activeStep >= 1) document.getElementById('fl-inv').classList.add('active');
-      if (activeStep >= 2) document.getElementById('fl-rev').classList.add('active');
-      if (activeStep >= 3) document.getElementById('fl-shop').classList.add('active');
-    } else {
-      ['fl-inv', 'fl-rev', 'fl-shop'].forEach(id => {
-        document.getElementById(id).classList.add('active', 'parallel');
-      });
-    }
-  }
+    // breakdown
+    const maxTime = Math.max(...times, 1);
+    const barColors = { s1: '#e05252', s2: '#27ae60', s3: '#5e9bdb' };
+    document.getElementById('perfBreakdown').innerHTML = results.map((r, i) => {
+      const p = PRODUCTS[i];
+      const elapsed = r.status === 'fulfilled' ? r.value.elapsed : 0;
+      const pct = Math.round((elapsed / maxTime) * 100);
+      return `
+        <div class="breakdown-item">
+          <span class="breakdown-emoji">${p.emoji}</span>
+          <span class="breakdown-name">${p.name}</span>
+          <div class="breakdown-bar-wrap">
+            <div class="breakdown-bar" style="width:${pct}%;background:${barColors[cls]};"></div>
+          </div>
+          <span class="breakdown-ms ${cls}">${elapsed}ms</span>
+        </div>`;
+    }).join('');
 
-  async function fetchProduct() {
-    const btn = document.getElementById('fetchBtn');
-    btn.disabled = true;
-    document.getElementById('productCard').classList.remove('visible');
-    document.getElementById('errorMsg').style.display = 'none';
-
-    const cfg = STAGE_CONFIG[currentStage];
-    const timerEl = document.getElementById('timerDisplay');
-    const pb = document.getElementById('progressBar');
-
-    timerEl.className = 'timer-display running';
-    pb.style.width = '0%';
-
-    startTime = Date.now();
-
-    if (currentStage === 1) {
-      let step = 0;
-      updateFlowDiagram(1, 0);
-      timerInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-        pb.style.width = Math.min((elapsed / cfg.maxMs) * 100, 100) + '%';
-
-        if (elapsed > 500 && step < 1) { step = 1; updateFlowDiagram(1, 1); }
-        if (elapsed > 800 && step < 2) { step = 2; updateFlowDiagram(1, 2); }
-        if (elapsed > 1100 && step < 3) { step = 3; updateFlowDiagram(1, 3); }
-      }, 30);
-    } else {
-      updateFlowDiagram(currentStage, 1);
-      timerInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-        pb.style.width = Math.min((elapsed / cfg.maxMs) * 100, 100) + '%';
-      }, 30);
-    }
-
-    try {
-      const res = await fetch(`http://localhost:8080/product/${currentProductId}`);
-      clearInterval(timerInterval);
-
-      const elapsed = Date.now() - startTime;
-      timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-      timerEl.className = `timer-display done-${currentStage}`;
-      pb.style.width = '100%';
-
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-      const data = await res.json();
-      renderCard(data);
-      addHistory(currentStage, data.elapsedMs || elapsed);
-    } catch (e) {
-      clearInterval(timerInterval);
-      const elapsed = Date.now() - startTime;
-      timerEl.innerHTML = `${elapsed}<span class="timer-unit">ms</span>`;
-      timerEl.className = 'timer-display done-1';
-      document.getElementById('errorMsg').textContent = `오류: ${e.message} — 서비스가 실행 중인지 확인하세요.`;
-      document.getElementById('errorMsg').style.display = 'block';
-    }
+    // history
+    const histEl = document.getElementById('perfHistory');
+    const item = document.createElement('div');
+    item.className = 'hist-item';
+    item.innerHTML = `
+      <span class="hist-mode ${cls}">${STAGE_LABELS[currentStage]}</span>
+      <span class="hist-time">${new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</span>
+      <span class="hist-ms ${cls}">${totalElapsed}ms</span>`;
+    histEl.insertBefore(item, histEl.firstChild);
+    if (histEl.children.length > 5) histEl.removeChild(histEl.lastChild);
 
     btn.disabled = false;
+    dot.classList.remove('active');
   }
 
-  function renderCard(data) {
-    document.getElementById('cardName').textContent = data.name;
-    document.getElementById('cardPrice').textContent = data.price.toLocaleString() + '원';
-    document.getElementById('cardDesc').textContent = data.description;
-    document.getElementById('cardStock').textContent = `${data.stock}개 (${data.stockStatus})`;
-    document.getElementById('cardRating').textContent = `⭐ ${data.rating}`;
-    document.getElementById('cardReview').textContent = `${data.reviewCount}개`;
-    document.getElementById('cardShop').textContent = data.shopName;
-    document.getElementById('cardCategory').textContent = data.category;
-    document.getElementById('cardOpen').textContent = data.shopOpen ? '🟢 영업중' : '🔴 마감';
-
-    const badge = document.getElementById('elapsedBadge');
-    badge.className = `elapsed-badge s${currentStage}`;
-    badge.textContent = `서버 측정: ${data.elapsedMs}ms`;
-
-    document.getElementById('productCard').classList.add('visible');
-  }
-
-  function addHistory(stage, ms) {
-    const cfg = STAGE_CONFIG[stage];
-    const labels = { 1: 'REST-MVC', 2: 'PARALLEL', 3: 'BOUNDED' };
-    const list = document.getElementById('historyList');
-    const item = document.createElement('div');
-    item.className = 'history-item';
-    item.innerHTML = `
-      <span class="history-badge s${stage}">${labels[stage]}</span>
-      <span>상품 #${currentProductId}</span>
-      <span class="history-ms s${stage}">${ms}ms</span>
-    `;
-    list.insertBefore(item, list.firstChild);
-    if (list.children.length > 8) list.removeChild(list.lastChild);
-  }
+  // 초기 로드
+  loadAllProducts();
 </script>
 </body>
 </html>

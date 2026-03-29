@@ -4,7 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9be4630-d3b4-4c49-a210-05141911664e" name="변경" comment="" />
+    <list default="true" id="c9be4630-d3b4-4c49-a210-05141911664e" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules/inventory-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/inventory-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/inventory-service.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/inventory-service.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/inventory-service.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/inventory-service.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/product-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/product-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/product-service.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/product-service.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/product-service.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/product-service.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/review-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/review-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/review-service.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/review-service.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/review-service.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/review-service.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/shop-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/shop-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/shop-service.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/shop-service.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/shop-service.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/shop-service.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/dev/delivery/InventoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/dev/delivery/InventoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k6/k6/result-stage1-fixed.json" beforeDir="false" afterPath="$PROJECT_DIR$/k6/k6/result-stage1-fixed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k6/k6/result-stage1-ramp.json" beforeDir="false" afterPath="$PROJECT_DIR$/k6/k6/result-stage1-ramp.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k6/run-all.sh" beforeDir="false" afterPath="$PROJECT_DIR$/k6/run-all.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k6/scenario2-fixed.js" beforeDir="false" afterPath="$PROJECT_DIR$/k6/scenario2-fixed.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-service/src/main/java/dev/delivery/ReviewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/review-service/src/main/java/dev/delivery/ReviewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/review-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-service/src/main/java/dev/delivery/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-service/src/main/java/dev/delivery/ShopController.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +129,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.InventoryServiceApplication.executor": "Run",
-    "Spring Boot.ProductServiceApplication.executor": "Run",
+    "Spring Boot.ProductServiceApplication.executor": "Debug",
     "Spring Boot.ReviewServiceApplication.executor": "Run",
     "Spring Boot.ShopServiceApplication.executor": "Run",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -154,18 +177,19 @@
         <entry key="SpringBootApplicationConfigurationType">
           <value>
             <map>
-              <entry key="InventoryServiceApplication" value="STOPPED" />
-              <entry key="ProductServiceApplication" value="STOPPED" />
-              <entry key="ReviewServiceApplication" value="STOPPED" />
-              <entry key="ShopServiceApplication" value="STOPPED" />
+              <entry key="InventoryServiceApplication" value="FAILED" />
+              <entry key="ProductServiceApplication" value="FAILED" />
+              <entry key="ReviewServiceApplication" value="FAILED" />
+              <entry key="ShopServiceApplication" value="FAILED" />
             </map>
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ReviewServiceApplication">
+  <component name="RunManager" selected="Spring Boot.InventoryServiceApplication">
     <configuration name="InventoryServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ENABLE_JMX_AGENT" value="false" />
       <module name="inventory-service.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="dev.delivery.InventoryServiceApplication" />
       <method v="2">

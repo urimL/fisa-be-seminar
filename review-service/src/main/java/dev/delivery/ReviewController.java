@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     @GetMapping("/review/{productId}")
-    public ResponseEntity<ReviewResponse> getReview(@PathVariable Long productId)
+    public ResponseEntity<ReviewResponse> getReview(@PathVariable("productId") Long productId)
             throws InterruptedException {
         log.info("[review] 리뷰 조회 요청 - productId: {}", productId);
         Thread.sleep(300);
