@@ -22,9 +22,14 @@ public class ProductController {
     private final RestTemplate restTemplate;
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable("id") Long id) {
         long start = System.currentTimeMillis();
         log.info("[product] 상품 조회 요청 - id: {}", id);
+
+        /**
+         * ProductController (rest-mvc)
+         * 순차 호출 - 각 응답 기다린 후 다음 호출
+         */
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품 없음: " + id));
