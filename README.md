@@ -11,6 +11,8 @@ WebFlux가 어떤 방식으로 완화하는지 실제 데모와 k6 부하 테스
 ---
 
 ## 프로젝트 구조
+<img width="1142" height="511" alt="image" src="https://github.com/user-attachments/assets/ba77715e-a24f-402a-a4b2-51873f527afc" />
+
 
 ```
 product-service (8080)   ← 클라이언트 요청 진입점
@@ -80,8 +82,9 @@ return Mono.zip(inventoryMono, reviewMono, shopMono)
 
 ### 2. Blocking 코드 격리 — boundedElastic
 
-JPA처럼 blocking이 불가피한 경우, 이벤트 루프에서 직접 실행하면 오히려 성능이 나빠진다.
-`Mono.fromCallable + boundedElastic`으로 blocking 작업을 별도 스레드 풀에 위임해 이벤트 루프를 보호한다.
+현실적인 환경에서 모든 코드를 non-blocking으로 완벽하게 전환하기는 어렵다.
+기존 시스템에서는 JPA, JDBC 등 blocking 방식으로 동작하는 기술을 사용하는 경우가 많다.
+이처럼 blocking이 불가피한 경우, `BoundedElastic`으로 blocking 작업을 별도 스레드 풀에 위임해 이벤트 루프를 보호한다.
 
 ```java
 Mono<Product> productMono = Mono.fromCallable(() ->
@@ -89,13 +92,33 @@ Mono<Product> productMono = Mono.fromCallable(() ->
 ).subscribeOn(Schedulers.boundedElastic());
 ```
 
+#### K6 부하테스트
+
+Jpa 기반의 DB 조회 작업을 이벤트 루프 스레드에서 작업한 경우와 boundedElastic으로 별도의 풀에 격리하여 작업한 경우 비교
+| | avg | p(95) | max |
+|---|---|---|---|
+| blocking-Jpa | 655ms | 1.8s | 3.55s |
+| boundedElastic | 517ms | 546s | 595ms |
+
+
 > boundedElastic은 blocking을 없애는 게 아니라 이벤트 루프를 보호하는 타협안이다.
 > 완전한 non-blocking을 원한다면 R2DBC가 필요하지만, JPA 생태계와의 트레이드오프가 있다.
 
+
 ### 3. 취소 전파
 
+<img width="873" height="288" alt="image" src="https://github.com/user-attachments/assets/a80cb421-2f4b-4524-bda1-2d244705d9d5" />
+
+Webflux는 Reactor 기반의 Publisher-Subscripber 구조로 동작한다.
+
+
+<img width="875" height="279" alt="image" src="https://github.com/user-attachments/assets/677e5363-be8e-40a2-b336-710974d6ab07" />
+
 클라이언트가 요청을 취소했을 때, MVC 구조에서는 이미 시작된 downstream 호출이 계속 진행될 수 있다.
-WebFlux는 취소 신호가 reactive chain을 따라 전파되어 불필요한 자원 점유를 줄인다.
+WebFlux는 취소 신호가 reactive chain을 따라 upstream으로 전파되어 요청에 대한 작업을 중단할 수 있다.
+이를 통해 불필요한 DB 조회나 외부 API 호출울 중단하여 리소스 낭비 줄이고, 시스템 효율을 높일 수 있다.
+
+
 
 ---
 
@@ -150,6 +173,6 @@ MVC에서도 `@Async`, `CompletableFuture`로 병렬 호출이 가능하다.
 
 ## 결론
 
-> 기술을 먼저 고르지 말고, 병목을 먼저 찾아라.
-> WebFlux는 모든 상황의 정답이 아니라,
-> I/O 대기가 많고 fan-out 호출이 많은 구간에서 강한 선택지다.
+> MSA는 나눈 서비스를 어떻게 엮느냐가 성능을 결정
+> 서비스가 나뉜 순간 네트워크 I/O는 피할 수 없고,  WebFlux는 그 I/O 대기를 낭비하지 않는 방법
+>  I/O 대기가 많고 여러 서비스를 동시에 호출하는 fan-out 구간에서 자원을 더 효율적으로 쓰게 해주는 하나의 선택지
